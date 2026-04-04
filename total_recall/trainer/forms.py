@@ -1,8 +1,9 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from trainer.models import Collection, Word
 
-from .models import Collection, Word
+User = get_user_model()
 
 
 class CollectionForm(forms.ModelForm):
@@ -17,6 +18,7 @@ class WordForm(forms.ModelForm):
         fields = ["text", "translation"]
 
 
+# pylint: disable=too-many-ancestors
 class SignUpForm(UserCreationForm):
     class Meta:
         model = User

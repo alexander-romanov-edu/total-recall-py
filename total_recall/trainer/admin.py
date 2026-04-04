@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from .models import Collection, Progress, Word
+from trainer.models import Collection, Progress, Word
 
 admin.site.register(Collection)
 admin.site.register(Word)

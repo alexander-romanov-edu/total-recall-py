@@ -1,6 +1,5 @@
 from django.urls import path
-
-from . import views
+from trainer import views
 
 urlpatterns = [
     path("", views.list_collections, name="list_collections"),

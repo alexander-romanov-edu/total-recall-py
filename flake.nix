@@ -2,7 +2,7 @@
   description = "Total Recall python WEB";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -32,10 +32,14 @@
                 ps: with ps; [
                   django
                   psycopg2
+                  pylint-django
                 ]
               ))
               poetry
+              black
+              ruff
             ];
+            env.DJANGO_SETTINGS_MODULE = "total_recall.settings";
           };
         };
     };
