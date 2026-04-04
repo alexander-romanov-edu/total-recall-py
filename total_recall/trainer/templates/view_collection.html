@@ -1,21 +1,6 @@
-{% extends "base.html" %}
-
-{% block content %}
-<h2>Collection: {{ collection.name }}</h2>
-
-{% if words %}
-  <ul>
-    {% for word in words %}
-      <li>{{ word.text }} — {{ word.translation }}</li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No words in this collection yet.</p>
-{% endif %}
-
-{% if user.is_authenticated and collection.owner == user %}
-  <a href="{% url 'add_word' collection.id %}">Add a New Word</a>
-{% endif %}
-
-<a href="{% url 'list_collections' %}">Back to Collections</a>
-{% endblock %}
+<form method="post">
+  {% csrf_token %}
+  <input name="text" placeholder="Word..." required />
+  <input name="translation" placeholder="Translation..." required />
+  <button>Add</button>
+</form>

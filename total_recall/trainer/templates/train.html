@@ -1,15 +1,63 @@
-{% extends "base.html" %} {% block content %}
-<h2>{{ masked }} - {{ translation }}</h2>
+{% extends "base.html" %}
 
-{% if feedback %}
-<p><b>{{ feedback }}</b></p>
-{% endif %}
+{% block content %}
 
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="answer" autofocus />
-  <button type="submit">Submit</button>
-</form>
+<div class="center">
 
-<p>Score: {{ score }} / {{ total }}</p>
+  <!-- Card -->
+  <div class="card" style="max-width: 500px; margin: auto;">
+
+    <!-- Word -->
+    <h1 style="font-size: 32px; margin-bottom: 10px;">
+      {{ masked }}
+    </h1>
+
+    <!-- Translation (subtle) -->
+    <p style="color: #9ca3af; margin-bottom: 20px;">
+      {{ translation }}
+    </p>
+
+    <!-- Feedback -->
+    {% if feedback %}
+      <div style="
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 10px;
+        background:
+          {% if 'Correct' in feedback %}
+            rgba(34,197,94,0.15);
+          {% else %}
+            rgba(239,68,68,0.15);
+          {% endif %}
+      ">
+        <b>{{ feedback }}</b>
+      </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="post">
+      {% csrf_token %}
+
+      <input
+        type="text"
+        name="answer"
+        placeholder="Type the word..."
+        autofocus
+        style="font-size: 16px; padding: 12px;"
+      />
+
+      <button style="width: 100%; margin-top: 10px;">
+        Submit
+      </button>
+    </form>
+
+  </div>
+
+  <!-- Score -->
+  <p style="margin-top: 20px; color: #9ca3af;">
+    Score: <b>{{ score }}</b> / {{ total }}
+  </p>
+
+</div>
+
 {% endblock %}
