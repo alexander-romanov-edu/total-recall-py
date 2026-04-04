@@ -4,8 +4,29 @@
     <title>Total Recall</title>
   </head>
   <body>
-    <h1>Total Recall</h1>
-    <hr />
-    {% block content %}{% endblock %}
+    <header>
+      <h1>Total Recall</h1>
+      <hr />
+      <!-- User login/logout links -->
+      {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}!</p>
+
+        <!-- Logout as a POST form -->
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
+        </form>
+
+        <!-- Link to create new collection -->
+        <a href="{% url 'create_collection' %}">Create Collection</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'signup' %}">Sign Up</a>
+      {% endif %}
+    </header>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
   </body>
 </html>

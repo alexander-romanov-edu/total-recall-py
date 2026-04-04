@@ -1,11 +1,58 @@
 import random
 
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.timezone import now
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 
 from .models import Collection, Progress, Word
+from .forms import CollectionForm, WordForm, SignUpForm
 from .utils import mask_word
 
+def list_collections(request):
+    if request.user.is_authenticated:
+        collections = Collection.objects.filter(owner=None) | Collection.objects.filter(owner=request.user)
+    else:
+        collections = Collection.objects.filter(owner=None)
+
+    return render(request, "list_collections.html", {"collections": collections})
+
+
+def view_collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id)
+    if collection.owner and collection.owner != request.user:
+        return render(request, "permission_denied.html")
+    words = collection.word_set.all()
+    return render(request, "view_collection.html", {
+        "collection": collection,
+        "words": words,
+    })
+
+@login_required
+def create_collection(request):
+    if request.method == "POST":
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.owner = request.user
+            collection.save()
+            return redirect("list_collections")
+    else:
+        form = CollectionForm()
+    return render(request, "create_collection.html", {"form": form})
+
+def add_word(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
+    if request.method == "POST":
+        form = WordForm(request.POST)
+        if form.is_valid():
+            word = form.save(commit=False)
+            word.collection = collection
+            word.save()
+            return redirect("view_collection", collection_id=collection.id)
+    else:
+        form = WordForm()
+    return render(request, "add_word.html", {"form": form, "collection": collection})
 
 def get_next_word(collection):
     due_words = collection.word_set.filter(progress__next_review__lte=now())
@@ -14,7 +61,6 @@ def get_next_word(collection):
         return random.choice(list(due_words))
     return random.choice(list(collection.word_set.all()))
 
-
 def start(request):
     if request.method == "POST":
         request.session["score"] = 0
@@ -22,72 +68,83 @@ def start(request):
         request.session["collection_id"] = request.POST["collection"]
         return redirect("train")
 
-    return render(request, "start.html", {"collections": Collection.objects.all()})
+    if request.user.is_authenticated:
+        collections = Collection.objects.filter(owner=None) | Collection.objects.filter(owner=request.user)
+    else:
+        collections = Collection.objects.filter(owner=None)
 
+    return render(request, "start.html", {"collections": collections})
 
 # TODO: make this configurable
 MAX_TASKS = 10
 def train(request):
-    collection_id = request.session.get("collection_id")
+    collection_id = request.GET.get("collection_id") or request.session.get("collection_id")
     if not collection_id:
-        return redirect("start")
+        return redirect("list_collections")
 
     collection = Collection.objects.get(id=collection_id)
+    request.session["collection_id"] = collection.id
+    if "score" not in request.session or "total" not in request.session:
+        request.session["score"] = 0
+        request.session["total"] = 0
+        request.session["mistakes"] = []
+
     feedback = None
 
-    # Initialize session counters if missing
-    request.session.setdefault("score", 0)
-    request.session.setdefault("total", 0)
-    request.session.setdefault("mistakes", [])  # list of word IDs
-
-    # Check if session is finished
-    if request.session["total"] >= MAX_TASKS:
-        # Fetch Word objects for mistakes
-        mistake_words = Word.objects.filter(id__in=request.session.get("mistakes", []))
-        return render(request, "end.html", {
-            "score": request.session["score"],
-            "total": request.session["total"],
-            "mistakes": mistake_words,
-        })
-
-    # Handle POST answer
-    if request.method == "POST" and "current_word" in request.session:
-        answer = request.POST.get("answer", "").strip()
-        correct_word_text = request.session["current_word"]
-        correct_word = Word.objects.filter(text=correct_word_text).first()
-
+    if request.method == "POST":
+        answer = request.POST["answer"]
+        correct_word = request.session["current_word"]
         request.session["total"] += 1
 
-        if answer.lower() == correct_word_text.lower():
+        word_obj = Word.objects.get(text=correct_word, collection=collection)
+        correct = answer.lower() == correct_word.lower()
+
+        if correct:
             request.session["score"] += 1
             feedback = "Correct!"
-            correct = True
         else:
-            feedback = f"Wrong! Answer: {correct_word_text}"
-            correct = False
-            # Add word ID to mistakes
-            if correct_word and correct_word.id not in request.session["mistakes"]:
-                mistakes = request.session.get("mistakes", [])
-                mistakes.append(correct_word.id)
-                request.session["mistakes"] = mistakes
+            feedback = f"Wrong! Answer: {correct_word}"
+            mistakes = request.session.get("mistakes", [])
+            mistakes.append({"text": word_obj.text, "translation": word_obj.translation})
+            request.session["mistakes"] = mistakes
 
-        # Update progress
-        if correct_word:
-            progress, _ = Progress.objects.get_or_create(word=correct_word)
-            progress.update(correct)
+        progress, _ = Progress.objects.get_or_create(word=word_obj)
+        progress.update(correct)
 
-    # Pick next word
+    if request.session["total"] >= MAX_TASKS:
+        mistake_words = request.session.get("mistakes", [])
+        score = request.session["score"]
+        total = request.session["total"]
+        response = render(request, "end.html", {
+            "score": score,
+            "total": total,
+            "mistakes": mistake_words,
+            "collection": collection,
+        })
+        request.session.pop("score", None)
+        request.session.pop("total", None)
+        request.session.pop("mistakes", None)
+        request.session.pop("current_word", None)
+        return response
     word = get_next_word(collection)
     request.session["current_word"] = word.text
 
-    return render(
-        request,
-        "train.html",
-        {
-            "masked": mask_word(word.text),
-            "translation": word.translation,
-            "score": request.session["score"],
-            "total": request.session["total"],
-            "feedback": feedback,
-        },
-    )
+    return render(request, "train.html", {
+        "masked": mask_word(word.text),
+        "translation": word.translation,
+        "score": request.session["score"],
+        "total": request.session["total"],
+        "feedback": feedback,
+        "collection": collection,
+    })
+
+def signup(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("list_collections")
+    else:
+        form = SignUpForm()
+    return render(request, "registration/signup.html", {"form": form})

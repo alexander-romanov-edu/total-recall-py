@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Select a Collection to Train</h2>
+
+{% if collections %}
+  <ul>
+    {% for col in collections %}
+      <li>
+        {{ col.name }} 
+        <a href="{% url 'train' %}?collection_id={{ col.id }}">Start Training</a>
+        {% if user.is_authenticated and col.owner == user %}
+          | <a href="{% url 'add_word' col.id %}">Add Word</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No collections available.</p>
+{% endif %}
+
+{% endblock %}
