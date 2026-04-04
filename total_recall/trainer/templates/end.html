@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Session Complete!</h2>
+  <p>Your score: {{ score }} / {{ total }}</p>
+
+  <form action="{% url 'start' %}" method="get">
+      <button type="submit">Play Again</button>
+  </form>
+{% endblock %}

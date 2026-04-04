@@ -25,6 +25,8 @@ def start(request):
     return render(request, "start.html", {"collections": Collection.objects.all()})
 
 
+# TODO: make this configurable
+MAX_TASKS = 10
 def train(request):
     collection_id = request.session.get("collection_id")
     if not collection_id:
@@ -33,8 +35,20 @@ def train(request):
     collection = Collection.objects.get(id=collection_id)
     feedback = None
 
-    if request.method == "POST":
-        answer = request.POST["answer"]
+    # Initialize session counters if missing
+    request.session.setdefault("score", 0)
+    request.session.setdefault("total", 0)
+
+    # Check if session is finished
+    if request.session["total"] >= MAX_TASKS:
+        return render(request, "end.html", {
+            "score": request.session["score"],
+            "total": request.session["total"],
+        })
+
+    # Handle POST answer
+    if request.method == "POST" and "current_word" in request.session:
+        answer = request.POST.get("answer", "").strip()
         correct_word = request.session["current_word"]
 
         request.session["total"] += 1
@@ -47,9 +61,10 @@ def train(request):
             feedback = f"Wrong! Answer: {correct_word}"
             correct = False
 
-        word = Word.objects.get(text=correct_word)
-        progress, _ = Progress.objects.get_or_create(word=word)
-        progress.update(correct)
+        word = Word.objects.filter(text=correct_word).first()
+        if word:
+            progress, _ = Progress.objects.get_or_create(word=word)
+            progress.update(correct)
 
     word = get_next_word(collection)
     request.session["current_word"] = word.text
