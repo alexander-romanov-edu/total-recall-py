@@ -62,13 +62,18 @@
     }
 
     button {
-      background: var(--accent);
+      background: #6366f1;
       border: none;
       color: white;
-      padding: 10px 16px;
+      padding: 12px 16px;
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 14px;
+    }
+
+    button:hover {
+      opacity: 0.9;
     }
 
     .btn-secondary {
@@ -86,12 +91,25 @@
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
       border: 1px solid #374151;
       background: #020617;
-      color: white;
+      color: #e5e7eb;
       margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    /* Placeholder color */
+    input::placeholder {
+      color: #6b7280;
+    }
+
+    /* Focus state (important!) */
+    input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px #6366f1;
     }
 
     .center {

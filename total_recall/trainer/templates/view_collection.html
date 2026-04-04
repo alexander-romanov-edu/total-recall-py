@@ -1,6 +1,57 @@
-<form method="post">
-  {% csrf_token %}
-  <input name="text" placeholder="Word..." required />
-  <input name="translation" placeholder="Translation..." required />
-  <button>Add</button>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="center">
+
+  <div class="card" style="max-width: 500px; margin: auto;">
+
+    <h2 style="margin-bottom: 20px;">
+      Add New Word
+    </h2>
+
+    <form method="post" autocomplete="off">
+      {% csrf_token %}
+
+      <div style="margin-bottom: 15px; text-align: left;">
+        <label style="display:block; margin-bottom:5px; font-weight:600;">
+          Word
+        </label>
+        <input
+          name="text"
+          placeholder="dog"
+          required
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          autofocus
+        />
+      </div>
+
+      <div style="margin-bottom: 15px; text-align: left;">
+        <label style="display:block; margin-bottom:5px; font-weight:600;">
+          Translation
+        </label>
+        <input
+          name="translation"
+          placeholder="собака"
+          required
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <button style="width: 100%; margin-top: 10px;">
+        Add Word
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

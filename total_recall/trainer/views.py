@@ -17,6 +17,8 @@ def list_collections(request):
 
     return render(request, "list_collections.html", {"collections": collections})
 
+def intro(request):
+    return render(request, "intro.html")
 
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collection, id=collection_id)

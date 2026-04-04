@@ -12,13 +12,11 @@
 {% for collection in collections %}
   <div class="card">
     <h3>{{ collection.name }}</h3>
-    <p class="muted">{{ collection.words.count }} words</p>
-
     <a href="{% url 'view_collection' collection.id %}">
       <button class="btn-secondary">Add Word</button>
     </a>
 
-    <a href="{% url 'train' %}?collection_id={{ collection.id }}">
+    <a href="{% url 'intro' %}?collection_id={{ collection.id }}">
       <button>Study</button>
     </a>
   </div>

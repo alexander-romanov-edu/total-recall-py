@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="center">
+
+  <div class="card" style="max-width: 500px; margin: auto;">
+
+    <h2 style="margin-bottom: 20px;">
+      🔴 Total Recall 🔵
+    </h2>
+
+    <p id="quote" style="font-size: 18px; margin-bottom: 20px;">
+      Initializing memory implant...
+    </p>
+
+  </div>
+
+</div>
+
+<script>
+const quotes = [
+  "Get ready for a memory implant.",
+  "This is not a dream.",
+  "Recall activated.",
+  "Your brain is about to upgrade.",
+  "Welcome to Total Recall.",
+  "Memory sequence loading..."
+];
+
+const quoteEl = document.getElementById("quote");
+quoteEl.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+// redirect after 1.5s
+setTimeout(() => {
+  window.location.href = "{% url 'train' %}";
+}, 1500);
+</script>
+
+{% endblock %}
