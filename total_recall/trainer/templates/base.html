@@ -5,7 +5,7 @@
   </head>
   <body>
     <header>
-      <h1>Total Recall</h1>
+      <h1><a href="{% url 'list_collections' %}">Total Recall</a></h1>
       <hr />
       <!-- User login/logout links -->
       {% if user.is_authenticated %}
