@@ -28,7 +28,13 @@
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = [ ];
             buildInputs = with pkgs; [
-              (python3.withPackages (ps: with ps; [ django ]))
+              (python3.withPackages (
+                ps: with ps; [
+                  django
+                  psycopg2
+                ]
+              ))
+              poetry
             ];
           };
         };

@@ -11,6 +11,8 @@
       clang-format.enable = true;
       black.enable = true;
       ruff.enable = true;
+      isort.enable = true;
+      prettier.enable = true;
     };
   };
 }
