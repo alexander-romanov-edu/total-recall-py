@@ -4,6 +4,17 @@
   <h2>Session Complete!</h2>
   <p>Your score: {{ score }} / {{ total }}</p>
 
+  {% if mistakes %}
+    <h3>Words to Review:</h3>
+    <ul>
+      {% for word in mistakes %}
+        <li>{{ word }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Great job! You got all words correct.</p>
+  {% endif %}
+
   <form action="{% url 'start' %}" method="get">
       <button type="submit">Play Again</button>
   </form>
