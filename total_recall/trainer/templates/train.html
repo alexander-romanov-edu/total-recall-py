@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content %}
+<h2>{{ masked }} - {{ translation }}</h2>
+
+{% if feedback %}
+<p><b>{{ feedback }}</b></p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="answer" autofocus />
+  <button type="submit">Submit</button>
+</form>
+
+<p>Score: {{ score }} / {{ total }}</p>
+{% endblock %}
