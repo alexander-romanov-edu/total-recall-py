@@ -9,34 +9,71 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Collection',
+            name="Collection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Word',
+            name="Word",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.CharField(max_length=100)),
-                ('translation', models.CharField(max_length=100)),
-                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trainer.collection')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.CharField(max_length=100)),
+                ("translation", models.CharField(max_length=100)),
+                (
+                    "collection",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="trainer.collection",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Progress',
+            name="Progress",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('next_review', models.DateTimeField(default=django.utils.timezone.now)),
-                ('interval', models.IntegerField(default=1)),
-                ('correct_streak', models.IntegerField(default=0)),
-                ('word', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='trainer.word')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "next_review",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
+                ("interval", models.IntegerField(default=1)),
+                ("correct_streak", models.IntegerField(default=0)),
+                (
+                    "word",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE, to="trainer.word"
+                    ),
+                ),
             ],
         ),
     ]

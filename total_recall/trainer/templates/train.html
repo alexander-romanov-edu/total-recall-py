@@ -1,25 +1,18 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="center">
-
   <!-- Card -->
-  <div class="card" style="max-width: 500px; margin: auto;">
-
+  <div class="card" style="max-width: 500px; margin: auto">
     <!-- Word -->
-    <h1 style="font-size: 32px; margin-bottom: 10px;">
-      {{ masked }}
-    </h1>
+    <h1 style="font-size: 32px; margin-bottom: 10px">{{ masked }}</h1>
 
     <!-- Translation (subtle) -->
-    <p style="color: #9ca3af; margin-bottom: 20px;">
-      {{ translation }}
-    </p>
+    <p style="color: #9ca3af; margin-bottom: 20px">{{ translation }}</p>
 
     <!-- Feedback -->
     {% if feedback %}
-      <div style="
+    <div
+      style="
         margin-bottom: 15px;
         padding: 10px;
         border-radius: 10px;
@@ -29,9 +22,10 @@
           {% else %}
             rgba(239,68,68,0.15);
           {% endif %}
-      ">
-        <b>{{ feedback }}</b>
-      </div>
+      "
+    >
+      <b>{{ feedback }}</b>
+    </div>
     {% endif %}
 
     <!-- Form -->
@@ -47,21 +41,17 @@
         autocapitalize="off"
         spellcheck="false"
         autofocus
-        style="font-size: 16px; padding: 12px;"
+        style="font-size: 16px; padding: 12px"
       />
 
-      <button style="width: 100%; margin-top: 10px;">
-        Submit
-      </button>
+      <button style="width: 100%; margin-top: 10px">Submit</button>
     </form>
-
   </div>
 
   <!-- Score -->
-  <p style="margin-top: 20px; color: #9ca3af;">
+  <p style="margin-top: 20px; color: #9ca3af">
     Score: <b>{{ score }}</b> / {{ total }}
   </p>
-
 </div>
 
 {% endblock %}

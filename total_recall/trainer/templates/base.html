@@ -1,142 +1,142 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Total Recall</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Total Recall</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #6366f1;
-      --success: #22c55e;
-      --danger: #ef4444;
-    }
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #6366f1;
+        --success: #22c55e;
+        --danger: #ef4444;
+      }
 
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
+      * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-    }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 32px;
-      border-bottom: 1px solid #1f2937;
-    }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 32px;
+        border-bottom: 1px solid #1f2937;
+      }
 
-    header a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-    }
+      header a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+      }
 
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
 
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      transition: 0.2s;
-    }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        transition: 0.2s;
+      }
 
-    .card:hover {
-      transform: translateY(-2px);
-    }
+      .card:hover {
+        transform: translateY(-2px);
+      }
 
-    button {
-      background: #6366f1;
-      border: none;
-      color: white;
-      padding: 12px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-    }
+      button {
+        background: #6366f1;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+      }
 
-    button:hover {
-      opacity: 0.9;
-    }
+      button:hover {
+        opacity: 0.9;
+      }
 
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid #374151;
-    }
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid #374151;
+      }
 
-    .btn-success {
-      background: var(--success);
-    }
+      .btn-success {
+        background: var(--success);
+      }
 
-    .btn-danger {
-      background: var(--danger);
-    }
+      .btn-danger {
+        background: var(--danger);
+      }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #374151;
+        background: #020617;
+        color: #e5e7eb;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
 
-    /* Placeholder color */
-    input::placeholder {
-      color: #6b7280;
-    }
+      /* Placeholder color */
+      input::placeholder {
+        color: #6b7280;
+      }
 
-    /* Focus state (important!) */
-    input:focus {
-      outline: none;
-      border-color: #6366f1;
-      box-shadow: 0 0 0 1px #6366f1;
-    }
+      /* Focus state (important!) */
+      input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 1px #6366f1;
+      }
 
-    .center {
-      text-align: center;
-    }
-  </style>
-</head>
+      .center {
+        text-align: center;
+      }
+    </style>
+  </head>
 
-<body>
-  <header>
-    <a href="{% url 'list_collections' %}">🧠 Total Recall</a>
+  <body>
+    <header>
+      <a href="{% url 'list_collections' %}">🧠 Total Recall</a>
 
-    <div>
-      {% if user.is_authenticated %}
-        {{ user.username }}
-        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+      <div>
+        {% if user.is_authenticated %} {{ user.username }}
+        <form action="{% url 'logout' %}" method="post" style="display: inline">
           {% csrf_token %}
           <button class="btn-secondary">Logout</button>
         </form>
-      {% else %}
+        {% else %}
         <a href="{% url 'login' %}">Login</a>
-      {% endif %}
-    </div>
-  </header>
+        {% endif %}
+      </div>
+    </header>
 
-  <div class="container">
-    {% block content %}{% endblock %}
-  </div>
-</body>
+    <div class="container">{% block content %}{% endblock %}</div>
+  </body>
 </html>

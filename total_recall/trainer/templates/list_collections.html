@@ -1,26 +1,23 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Your Collections</h2>
 
 <a href="{% url 'create_collection' %}">
   <button>+ New Collection</button>
 </a>
 
-<br><br>
+<br /><br />
 
 {% for collection in collections %}
-  <div class="card">
-    <h3>{{ collection.name }}</h3>
-    <a href="{% url 'view_collection' collection.id %}">
-      <button class="btn-secondary">Add Word</button>
-    </a>
+<div class="card">
+  <h3>{{ collection.name }}</h3>
+  <a href="{% url 'view_collection' collection.id %}">
+    <button class="btn-secondary">Add Word</button>
+  </a>
 
-    <a href="{% url 'intro' %}?collection_id={{ collection.id }}">
-      <button>Study</button>
-    </a>
-  </div>
+  <a href="{% url 'intro' %}?collection_id={{ collection.id }}">
+    <button>Study</button>
+  </a>
+</div>
 {% empty %}
-  <p>No collections yet.</p>
-{% endfor %}
-{% endblock %}
+<p>No collections yet.</p>
+{% endfor %} {% endblock %}

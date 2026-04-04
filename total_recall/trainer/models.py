@@ -1,8 +1,9 @@
 from datetime import timedelta
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
-from django.contrib.auth.models import User
+
 
 class Collection(models.Model):
     name = models.CharField(max_length=100)
@@ -12,6 +13,7 @@ class Collection(models.Model):
     def __str__(self):
         return self.name
 
+
 class Word(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
     text = models.CharField(max_length=100)
@@ -19,6 +21,7 @@ class Word(models.Model):
 
     def __str__(self):
         return self.text
+
 
 class Progress(models.Model):
     word = models.OneToOneField(Word, on_delete=models.CASCADE)

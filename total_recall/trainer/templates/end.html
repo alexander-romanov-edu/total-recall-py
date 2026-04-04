@@ -1,23 +1,21 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<h2>Session Complete!</h2>
+<p>Your score: {{ score }} / {{ total }}</p>
 
-{% block content %}
-  <h2>Session Complete!</h2>
-  <p>Your score: {{ score }} / {{ total }}</p>
+{% if mistakes %}
+<h3>Words to Review:</h3>
+<ul>
+  {% for word in mistakes %}
+  <li>{{ word.text }} — {{ word.translation }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Great job! You got all words correct.</p>
+{% endif %}
 
-  {% if mistakes %}
-    <h3>Words to Review:</h3>
-    <ul>
-      {% for word in mistakes %}
-        <li>{{ word.text }} — {{ word.translation }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Great job! You got all words correct.</p>
-  {% endif %}
-
-  <form action="{% url 'train' %}" method="get">
-    <input type="hidden" name="collection_id" value="{{ collection.id }}">
-    <button type="submit">Play Again</button>
-  </form>
-  <a href="{% url 'list_collections' %}">Pick Another Collection</a>
+<form action="{% url 'train' %}" method="get">
+  <input type="hidden" name="collection_id" value="{{ collection.id }}" />
+  <button type="submit">Play Again</button>
+</form>
+<a href="{% url 'list_collections' %}">Pick Another Collection</a>
 {% endblock %}

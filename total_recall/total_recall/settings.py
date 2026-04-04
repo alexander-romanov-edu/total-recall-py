@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'list_collections'
+LOGIN_REDIRECT_URL = "list_collections"
 
 # Application definition
 
