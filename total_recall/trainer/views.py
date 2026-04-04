@@ -105,7 +105,8 @@ def train(request):
         else:
             feedback = f"Wrong! Answer: {correct_word}"
             mistakes = request.session.get("mistakes", [])
-            mistakes.append({"text": word_obj.text, "translation": word_obj.translation})
+            if not any(m['text'] == word_obj.text for m in mistakes):
+                mistakes.append({"text": word_obj.text, "translation": word_obj.translation})
             request.session["mistakes"] = mistakes
 
         progress, _ = Progress.objects.get_or_create(word=word_obj)
