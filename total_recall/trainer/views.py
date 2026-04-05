@@ -69,13 +69,12 @@ def add_word(request, collection_id):
             word = form.save(commit=False)
             word.collection = collection
             word.save()
-            return redirect("view_collection", collection_id=collection.id)
+
+            return redirect("add_word", collection_id=collection.id)
     else:
         form = WordForm()
 
     return render(request, "add_word.html", {"form": form, "collection": collection})
-
-
 def get_next_word(collection):
     due_words = collection.word_set.filter(progress__next_review__lte=now())
 
