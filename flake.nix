@@ -26,7 +26,7 @@
           imports = [ ./nix/treefmt.nix ];
 
           devShells.default = pkgs.mkShell {
-            nativeBuildInputs = [ ];
+            nativeBuildInputs = with pkgs; [ act ];
             buildInputs = with pkgs; [
               (python3.withPackages (
                 ps: with ps; [
@@ -58,8 +58,8 @@
 
               echo "🚀 Starting Total Recall..."
 
-              $PYTHON manage.py migrate
-              $PYTHON manage.py runserver 0.0.0.0:8000
+              $PYTHON $PWD/total_recall/manage.py migrate
+              $PYTHON $PWD/total_recall/manage.py runserver 0.0.0.0:8000
             ''}";
           };
         };

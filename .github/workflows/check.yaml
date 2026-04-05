@@ -1,0 +1,31 @@
+on:
+  - push
+jobs:
+  check-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v24
+      - name: Start app and curl
+        run: |
+          nix run > server.log 2>&1 &
+          PID=$!
+
+          echo "Waiting for server to start..."
+
+          # wait up to 5 minutes
+          for i in {1..600}; do
+            if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/ | grep -q "200"; then
+              echo "✅ Server is up and homepage returned 200"
+              kill $PID
+              exit 0
+            fi
+          sleep 1
+          done
+
+          echo "❌ Server did not start or homepage not reachable"
+          echo "---- SERVER LOGS ----"
+          cat server.log
+
+          kill $PID
+          exit 1
