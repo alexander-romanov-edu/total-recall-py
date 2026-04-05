@@ -41,6 +41,27 @@
             ];
             env.DJANGO_SETTINGS_MODULE = "total_recall.settings";
           };
+          apps.default = {
+            type = "app";
+            program = "${pkgs.writeShellScript "run-django" ''
+              export DJANGO_SETTINGS_MODULE=total_recall.settings
+              export PYTHONPATH=$PWD
+
+              PYTHON=${
+                (pkgs.python3.withPackages (
+                  ps: with ps; [
+                    django
+                    psycopg2
+                  ]
+                ))
+              }/bin/python
+
+              echo "🚀 Starting Total Recall..."
+
+              $PYTHON manage.py migrate
+              $PYTHON manage.py runserver 0.0.0.0:8000
+            ''}";
+          };
         };
     };
 }
