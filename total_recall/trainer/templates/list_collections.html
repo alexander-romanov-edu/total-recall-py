@@ -10,7 +10,7 @@
 {% for collection in collections %}
 <div class="card">
   <h3>{{ collection.name }}</h3>
-  <a href="{% url 'view_collection' collection.id %}">
+  <a href="{% url 'add_word' collection.id %}">
     <button class="btn-secondary">Add Word</button>
   </a>
 

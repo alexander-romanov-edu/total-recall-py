@@ -58,7 +58,11 @@ def create_collection(request):
 
 
 def add_word(request, collection_id):
-    collection = Collection.objects.get(id=collection_id)
+    collection = get_object_or_404(Collection, id=collection_id)
+
+    if collection.owner and collection.owner != request.user:
+        return render(request, "permission_denied.html")
+
     if request.method == "POST":
         form = WordForm(request.POST)
         if form.is_valid():
@@ -68,6 +72,7 @@ def add_word(request, collection_id):
             return redirect("view_collection", collection_id=collection.id)
     else:
         form = WordForm()
+
     return render(request, "add_word.html", {"form": form, "collection": collection})
 
 
