@@ -22,6 +22,9 @@ def list_collections(request):
 
 
 def intro(request):
+    collection_id = request.GET.get("collection_id")
+    if collection_id:
+        request.session["collection_id"] = collection_id
     return render(request, "intro.html")
 
 
@@ -76,28 +79,12 @@ def get_next_word(collection):
     return random.choice(list(collection.word_set.all()))
 
 
-def start(request):
-    if request.method == "POST":
-        request.session["score"] = 0
-        request.session["total"] = 0
-        request.session["collection_id"] = request.POST["collection"]
-        return redirect("train")
-
-    if request.user.is_authenticated:
-        collections = Collection.objects.filter(owner=None) | Collection.objects.filter(
-            owner=request.user
-        )
-    else:
-        collections = Collection.objects.filter(owner=None)
-
-    return render(request, "start.html", {"collections": collections})
-
-
 # TODO: make this configurable
 MAX_TASKS = 10
 
 
 def train(request):
+    print("SESSION:", dict(request.session))
     collection_id = request.GET.get("collection_id") or request.session.get(
         "collection_id"
     )
